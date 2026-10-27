@@ -1,8 +1,11 @@
+require('dotenv').config()
 const { default: makeWASocket, useMultiFileAuthState, makeCacheableSignalKeyStore, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const express = require('express');
 const P = require('pino');
 const fs = require('fs');
 const { loadCommands, getCommands } = require('./commands');
+const { handleHooks } = require('./meta/lib/hooks');
+const { getSettings } = require('./meta/lib/settings');
 
 const PORT = 8080;
 const BOT_NAME = "META-AI";
