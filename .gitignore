@@ -1,0 +1,7 @@
+node_modules/
+tmp/
+*.mp3
+*.mp4
+session/
+auth_info/
+.env
