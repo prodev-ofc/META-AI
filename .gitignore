@@ -1,7 +1,13 @@
 node_modules/
-tmp/
-*.mp3
-*.mp4
+auth/
 session/
-auth_info/
+data/
+database/
+tmp/
+temp/
+*.session
+*.db
+*.sqlite
 .env
+npm-debug.log
+.DS_Store
