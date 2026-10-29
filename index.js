@@ -1,3 +1,4 @@
+
 require('dotenv').config()
 const { default: makeWASocket, useMultiFileAuthState, makeCacheableSignalKeyStore, Browsers, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const express = require('express');
@@ -6,6 +7,8 @@ const fs = require('fs');
 const { loadCommands, getCommands } = require('./commands');
 const { handleHooks } = require('./meta/lib/hooks');
 const { getSettings } = require('./meta/lib/settings');
+const { loadSessionFromEnv } = require('./meta/lib/session');
+loadSessionFromEnv();
 
 const PORT = 8080;
 const BOT_NAME = "META-AI";
@@ -46,11 +49,11 @@ async function startBot(){
   });
 
   sock.ev.on('messages.upsert', async ({messages})=>{
-    const m=messages[0]; 
+    const m=messages[0];
     if(!m.message) return;
     const t = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || "";
     if(!t) return;
-    
+
     const jid = m.key.remoteJid;
     const isGroup = jid.endsWith('@g.us');
     const pushName = m.pushName || "User";
@@ -68,7 +71,7 @@ async function startBot(){
     }
 
     if(!t.startsWith('.')) return;
-    const args=t.slice(1).trim().split(/ +/); 
+    const args=t.slice(1).trim().split(/ +/);
     const name=args.shift().toLowerCase();
     if(!name || !commands.has(name)) return;
 
@@ -90,3 +93,4 @@ fs.watch('./meta', (event, filename)=>{
     },500);
   }
 });
+	
