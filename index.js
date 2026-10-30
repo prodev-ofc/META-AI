@@ -10,6 +10,9 @@ const { getSettings } = require('./meta/lib/settings');
 const { loadSessionFromEnv } = require('./meta/lib/session');
 loadSessionFromEnv();
 
+const antiSpam = require('./meta/antispam')
+const antiVideo = require('./meta/antivideo')
+
 const PORT = 8080;
 const BOT_NAME = "META-AI";
 const OWNER = "prodev zw";
@@ -53,6 +56,9 @@ async function startBot(){
     if(!m.message) return;
     const t = m.message.conversation || m.message.extendedTextMessage?.text || m.message.imageMessage?.caption || m.message.videoMessage?.caption || "";
     if(!t) return;
+
+     if(await antiSpam.handleAntiSpam(sock, m)) return
+     if(await antiVideo.handleAntiVideo?.(sock,m)) return
 
     const jid = m.key.remoteJid;
     const isGroup = jid.endsWith('@g.us');
