@@ -18,7 +18,7 @@ async function getAI(p){
   return `No cap, I got you ✨ ${p.slice(0,80)}\n\n${WATERMARK}`
 }
 module.exports={
-  name:"chatbot", react:"🧠", category:"ai", alias:["ai","chat"], desc:"AI chatbot toggle",
+  name:"chatbot", react:"🧠", category:"ai", alias:["bot","chat"], desc:"AI chatbot toggle",
   execute: async (sock,m,args,{WATERMARK})=>{
     await sock.sendMessage(m.key.remoteJid,{react:{text:"🧠",key:m.key}});
     const chatId=m.key.remoteJid; const db=loadDB(); const act=(args[0]||"").toLowerCase()

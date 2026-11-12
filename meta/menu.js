@@ -21,7 +21,7 @@ function formatUptime(){
 module.exports={
   name:"menu",
   react:"📜",
-  alias:["help","list","commands"],
+  alias:["list"],
   category:"main",
   desc:"Show all commands",
   execute: async (sock,m,args,{BOT_NAME,OWNER,PREFIX,commands})=>{

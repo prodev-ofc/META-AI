@@ -63,7 +63,39 @@ async function startBot(){
     const jid = m.key.remoteJid;
     const isGroup = jid.endsWith('@g.us');
     const pushName = m.pushName || "User";
-    console.log(`\n[${new Date().toLocaleTimeString()}] [${isGroup?'GROUP':'PVT'}] ${pushName}: ${t.substring(0,80)}`);
+const isStatus = jid === 'status@broadcast';
+
+// --- NEW SHINE LOGS ---
+const time = new Date().toLocaleTimeString('en-US', { hour12: true });
+const line = "=".repeat(50);
+
+// Get group name if it's a group (safe, won't crash)
+let groupName = "";
+if (isGroup) {
+  try {
+    const meta = await sock.groupMetadata(jid).catch(() => null);
+    groupName = meta ? meta.subject : jid;
+  } catch { groupName = jid; }
+}
+
+if (isStatus) {
+  console.log(`\n${line}`);
+  console.log(`[${time}] [STATUS]`);
+  console.log(`  ${pushName}`);
+  console.log(`  ${t}`);
+  console.log(`${line}\n`);
+} else if (isGroup) {
+  console.log(`\n${line}`);
+  console.log(`[${time}] [GROUP] => ${groupName}`);
+  console.log(`${pushName}: ${t}`);
+  console.log(`${line}\n`);
+} else {
+  console.log(`\n${line}`);
+  console.log(`[${time}] [PVT]`);
+  console.log(`${pushName}: ${t}`);
+  console.log(`${line}\n`);
+}
+// --- END LOGS ---
 
     const commands = getCommands();
 

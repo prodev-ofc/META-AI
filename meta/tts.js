@@ -1,19 +1,67 @@
+const gTTS = require('gtts');
+const fs = require('fs');
+const path = require('path');
+
+const WATERMARK="> _✨META AI by 𝐏𝐑𝐎𝐃𝐄𝐕 𝐀𝐏𝐏𝐋𝐄𝐒𝐒𝐀𝐍𝐂𝐄_"
+const TEMP_DIR = path.join(__dirname, '..', 'temp')
+if(!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR, {recursive:true})
+
+function generateTTS(text, lang, filePath){
+  return new Promise((resolve, reject)=>{
+    const gtts = new gTTS(text, lang)
+    gtts.save(filePath, (err)=>{
+      if(err) return reject(err)
+      resolve(filePath)
+    })
+  })
+}
+
 module.exports={
-  name:"tts", react:"🔊", category:"ai", alias:["say","voice"], desc:"Text to voice",
+  name:"tts",
+  react:"🔊",
+  alias:["say","gtts","speak"],
+  category:"tools",
+  desc:"Text to speech",
   execute: async (sock,m,args)=>{
-    const text=args.join(' ')
-    if(!text) return await sock.sendMessage(m.key.remoteJid,{text:"*TTS* 🔊\n\nUse: .tts <text>\nEx: .tts Ndiyani akunetsa boe"}, {quoted:m})
-    await sock.sendMessage(m.key.remoteJid,{react:{text:"🔊",key:m.key}})
+    const jid=m.key.remoteJid
+    
+    let language = 'en'
+    let text = args.join(" ").trim()
+
+    // Support: .tts en Hello or .tts Hello
+    if(args.length >= 2 && /^[a-z]{2}$/i.test(args[0])){
+      language = args[0].toLowerCase()
+      text = args.slice(1).join(" ").trim()
+    }
+
+    if(!text){
+      return sock.sendMessage(jid,{
+        text:`*TTS Usage:*\n.tts <text>\n.tts <lang> <text>\n\nExamples:\n.tts Hello world\n.tts en Hello\n.tts fr Bonjour\n.tts ja Konnichiwa\n\nLangs: en, fr, es, de, ja, hi, etc\n\n${WATERMARK}`
+      },{quoted:m})
+    }
+
+    const fileName = `tts-${Date.now()}.mp3`
+    const filePath = path.join(TEMP_DIR, fileName)
+
     try{
-      const gtts=require('google-tts-api')
-      const axios=require('axios')
-      const isShona=/(ndiyani|boe|mannexy|arikunetsa|ndaka)/i.test(text)
-      const lang=isShona?'en':'en'
-      const url=gtts.getAudioUrl(text.slice(0,200),{lang, slow:false, host:'https://translate.google.com'})
-      const res=await axios.get(url,{responseType:'arraybuffer'})
-      await sock.sendMessage(m.key.remoteJid,{audio:Buffer.from(res.data), mimetype:'audio/mp4', ptt:true},{quoted:m})
+      await sock.sendMessage(jid,{react:{text:"🔊",key:m.key}})
+
+      await generateTTS(text, language, filePath)
+
+      await sock.sendMessage(jid,{
+        audio: { url: filePath },
+        mimetype: 'audio/mpeg',
+        ptt: false
+      },{quoted:m})
+
+      await sock.sendMessage(jid,{react:{text:"✅",key:m.key}})
+
+      try{ fs.unlinkSync(filePath) }catch{}
+
     }catch(e){
-      await sock.sendMessage(m.key.remoteJid,{text:"TTS failed 😅 "+e.message},{quoted:m})
+      console.log('[tts] error:', e.message)
+      await sock.sendMessage(jid,{text:`❌ Error generating TTS: ${e.message}\n\n${WATERMARK}`},{quoted:m})
+      try{ if(fs.existsSync(filePath)) fs.unlinkSync(filePath) }catch{}
     }
   }
 }

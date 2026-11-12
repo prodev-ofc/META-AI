@@ -32,7 +32,7 @@ module.exports={
         const senderId=m.key.participant || m.key.remoteJid
         const isSenderAdmin=groupMeta.participants.some(p=>p.id===senderId && (p.admin))
         if(!isSenderAdmin){
-          return await sock.sendMessage(chatId,{text:"❌ Admin only"}, {quoted:m})
+          return await sock.sendMessage(chatId,{text:"❌This command is reserved to my Creator *(PRDEV ZW)* or group Admins only"}, {quoted:m})
         }
       }catch{}
     }
