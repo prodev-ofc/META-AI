@@ -1,13 +1,93 @@
+# ==================================================
+#  XPRO-MD / META-AI - .gitignore
+#  Created by XPRO-TECH by PRODEV ZW
+# ==================================================
+
+# --- KEEP THESE - DO NOT IGNORE ---
+# package.json, menu.jpg, assets/ must push!
+
+# Dependencies
 node_modules/
-auth/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Env / Config - NEVER PUSH THESE
+.env
+.env.*
+!.env.example
+config.js
+config.json
+settings.js
+*.local
+
+# WhatsApp Session / Auth - NEVER PUSH THESE
 session/
-data/
-database/
-tmp/
-temp/
+sessions/
+auth/
+auth_info/
+creds.json
 *.session
+*.creds
+baileys_store/
+store/
+.qr/
+qr.png
+
+# Bot Data / Database - keep package.json!
+data/
+db/
+database/
 *.db
 *.sqlite
-.env
-npm-debug.log
+*.sqlite3
+users.json
+groups.json
+chats.json
+pairing.json
+# DO NOT add *.json here - it kills package.json
+
+# Media / Downloads - only folders, NOT menu.jpg / assets
+media/
+downloads/
+tmp/
+temp/
+.cache/
+# DO NOT add *.png *.jpg *.mp3 *.mp4 here - it kills menu.jpg
+
+# Logs / PM2
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pm2/
+pm2.log
+ecosystem.config.js
+
+# OS / Editor
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build / Dist
+dist/
+build/
+out/
+coverage/
+.nyc_output/
+
+# Backups / Zips
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.bak
+*.backup
+backup/
+backups/
