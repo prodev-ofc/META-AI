@@ -220,7 +220,7 @@ async function react(sock, m, emoji) {
 
 module.exports = {
   name: 'tts',
-  alias: ['say', 'gtts', 'speak', 'voice'],
+  alias: ['say', 'gtts', 'transcribe', 'tspk'],
   category: 'tools',
   desc: 'Convert text into speech in multiple languages',
 

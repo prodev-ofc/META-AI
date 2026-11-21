@@ -60,6 +60,12 @@ async function startBot(){
      if(await antiSpam.handleAntiSpam(sock, m)) return
      if(await antiVideo.handleAntiVideo?.(sock,m)) return
 
+// in index.js / bot.js - before running any command
+let settings = { mode: 'public' };
+try { settings = JSON.parse(fs.readFileSync('./database/settings.json', 'utf-8')); } catch {}
+global.botMode = settings.mode || 'public';
+if(global.botMode === 'self' && !m.key.fromMe && !isOwner(m)) return; // ignore non-owner
+
     const jid = m.key.remoteJid;
     const isGroup = jid.endsWith('@g.us');
     const pushName = m.pushName || "User";
